@@ -11,6 +11,7 @@ public class ProductRepository {
 
     private ProductDao productDao;
     private LiveData<List<Product>> allProducts;
+    private LiveData<List<Product>> spesa;
 
     public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getInstance(application);
@@ -32,6 +33,11 @@ public class ProductRepository {
 
     public void deleteAllProducts() {
         new DeleteAllProductsAsyncTask(productDao).execute();
+    }
+
+    public LiveData<List<Product>> getProductFromBarcode(String barcode) {
+        new GetProductFromBarcodeAsyncTask(productDao).execute(barcode);
+        return allProducts;
     }
 
     public LiveData<List<Product>> getAllProducts() {
@@ -93,4 +99,21 @@ public class ProductRepository {
             return null;
         }
     }
+
+    private static class GetProductFromBarcodeAsyncTask extends AsyncTask<String, Void, Void> {
+        private ProductDao productDao;
+
+        private GetProductFromBarcodeAsyncTask(ProductDao productDao) {
+            this.productDao = productDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... barcodes) {
+            allProducts.getValue().add(productDao.getProductFromBarcode(barcodes[0]));
+            return allProducts;
+            productDao.insert(products[0]);
+            return null;
+        }
+    }
+
 }

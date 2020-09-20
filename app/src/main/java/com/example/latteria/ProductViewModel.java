@@ -12,6 +12,7 @@ public class ProductViewModel extends AndroidViewModel {
 
     private ProductRepository repository;
     private LiveData<List<Product>> allProducts;
+    private LiveData<List<Product>> spesa;
 
     public ProductViewModel(@NonNull Application application) {
         super(application);
@@ -31,11 +32,16 @@ public class ProductViewModel extends AndroidViewModel {
         repository.delete(product);
     }
 
-    public void deleteAllProducts(Product product) {
-        repository.deleteAllProducts();
+    public LiveData<List<Product>> getProductFromBarcode(String barcode) {
+        spesa = repository.getProductFromBarcode(barcode);
+        return spesa;
     }
+
+    public void deleteAllProducts() { repository.deleteAllProducts(); }
 
     public LiveData<List<Product>> getAllProducts() {
         return allProducts;
     }
+
+
 }

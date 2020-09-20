@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class Product {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int productID;
 
     private String barcode;
 
@@ -24,12 +24,12 @@ public class Product {
         this.sellingPrice = sellingPrice;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public int getId() {
-        return id;
+    public int getProductID() {
+        return productID;
     }
 
     public String getBarcode() {

@@ -20,7 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class HomeFragment extends Fragment {
+
+    private ProductViewModel productViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,8 +43,6 @@ public class HomeFragment extends Fragment {
 
         final ProductAdapter adapter = new ProductAdapter();
         recyclerView.setAdapter(adapter);
-
-        ProductViewModel productViewModel;
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         productViewModel.getAllProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
@@ -69,13 +71,26 @@ public class HomeFragment extends Fragment {
         if (id == R.id.action_spesa) {
 
             Intent intent = new Intent(getActivity(), ScannerActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,2);
 
             Toast.makeText(getActivity(), "Scansionare codice", Toast.LENGTH_LONG ).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 2) {
+            if(resultCode == RESULT_OK) {
+
+                String returnString = data.getStringExtra("barcode");
+
+                productViewModel.getProductFromBarcode(returnString);
+
+            }
+        }
     }
 
 }
