@@ -41,7 +41,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         notifyDataSetChanged();
     }
 
-    class ProductHolder extends RecyclerView.ViewHolder {
+    static class ProductHolder extends RecyclerView.ViewHolder {
         private TextView textViewNome;
         private TextView textViewDescrizione;
         private TextView textViewPrezzo;

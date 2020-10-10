@@ -2,21 +2,26 @@ package com.example.latteria;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class ProductRepository {
 
     private ProductDao productDao;
     private LiveData<List<Product>> allProducts;
-    private LiveData<List<Product>> spesa;
 
     public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getInstance(application);
         productDao = database.productDao();
-        allProducts = productDao.getAllProduct();
+        allProducts = productDao.getAllProducts();
     }
 
     public void insert(Product product) {
@@ -35,13 +40,11 @@ public class ProductRepository {
         new DeleteAllProductsAsyncTask(productDao).execute();
     }
 
-    public LiveData<List<Product>> getProductFromBarcode(String barcode) {
-        new GetProductFromBarcodeAsyncTask(productDao).execute(barcode);
-        return allProducts;
-    }
+    public LiveData<List<Product>> getAllProducts() { return allProducts; }
 
-    public LiveData<List<Product>> getAllProducts() {
-        return allProducts;
+    public LiveData<List<Product>> getProductFromBarcode(String barcode) throws ExecutionException, InterruptedException {
+        return productDao.getProductFromBarcode(barcode);
+        // return new GetProductFromBarcodeAsyncTask(productDao).execute(barcode).get();
     }
 
     private static class InsertProductAsyncTask extends AsyncTask<Product, Void, Void> {
@@ -100,7 +103,7 @@ public class ProductRepository {
         }
     }
 
-    private static class GetProductFromBarcodeAsyncTask extends AsyncTask<String, Void, Void> {
+    private static class GetProductFromBarcodeAsyncTask extends AsyncTask<String, Void, List<Product>> {
         private ProductDao productDao;
 
         private GetProductFromBarcodeAsyncTask(ProductDao productDao) {
@@ -108,11 +111,17 @@ public class ProductRepository {
         }
 
         @Override
-        protected Void doInBackground(String... barcodes) {
-            allProducts.getValue().add(productDao.getProductFromBarcode(barcodes[0]));
-            return allProducts;
-            productDao.insert(products[0]);
-            return null;
+        protected List<Product> doInBackground(String... barcodes) {
+            List<Product> spesa = new ArrayList<>();
+            //spesa = productDao.getProductFromBarcode(barcodes[0]);
+
+            return spesa;
+        }
+
+        @Override
+        protected void onPostExecute (List<Product> spesa) {
+            Log.d("prodotto",spesa.get(0).getName());
+            super.onPostExecute(spesa);
         }
     }
 

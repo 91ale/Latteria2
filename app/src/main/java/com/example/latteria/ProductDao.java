@@ -3,6 +3,7 @@ package com.example.latteria;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -25,10 +26,10 @@ public interface ProductDao {
     void deleteAllproducts();
 
     @Query("SELECT * FROM product_table")
-    LiveData<List<Product>> getAllProduct();
+    LiveData<List<Product>> getAllProducts();
 
     @Query("SELECT * FROM product_table WHERE barcode = :barcode")
-    Product getProductFromBarcode(String barcode);
+    LiveData<List<Product>> getProductFromBarcode(String barcode);
 
 
 }

@@ -44,8 +44,9 @@ public abstract class ProductDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            productDao.insert(new Product("1234567891011", "prodotto1", "descrizione1", 1.11));
+            productDao.insert(new Product("8006700206096", "prodotto1", "descrizione1", 1.11));
             productDao.insert(new Product("8026624612773", "RESET FLUID 2 in 1", "correttore", 1.90));
+            productDao.insert(new Product("5053827189101", "Kellogg's Protein", "barreta dolce  ", 1.50));
             return null;
         }
     }

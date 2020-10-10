@@ -1,14 +1,14 @@
 package com.example.latteria;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
+import java.util.concurrent.ExecutionException;
 
 public class HomeFragment extends Fragment {
 
     private ProductViewModel productViewModel;
+    ProductAdapter adapter = new ProductAdapter();
+    String barcode = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,17 +42,38 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setHasFixedSize(true);
 
-        final ProductAdapter adapter = new ProductAdapter();
         recyclerView.setAdapter(adapter);
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        productViewModel.getAllProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+        /*productViewModel.getAllProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
-            public void onChanged(List<Product> products) {
+            public void onChanged(@Nullable List<Product> products) {
                 adapter.setProducts(products);
             }
-        });
+        });*/
 
+    }
+
+    public void onMyKeyDown(int key, KeyEvent event){
+        Log.d("KeyEvent", String.valueOf(event.getNumber()));
+        if (key == KeyEvent.KEYCODE_ENTER) {
+            try {
+                productViewModel.getProductFromBarcode(barcode).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Product> products) {
+                        adapter.setProducts(products);
+                    }
+                });
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            barcode = "";
+        }
+        else {
+            barcode = barcode + event.getNumber();
+        }
     }
 
     @Override
@@ -70,27 +92,36 @@ public class HomeFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_spesa) {
 
-            Intent intent = new Intent(getActivity(), ScannerActivity.class);
-            startActivityForResult(intent,2);
+            /*Intent intent = new Intent(getActivity(), ScannerActivity.class);
+            //startActivityForResult(intent,2);
 
-            Toast.makeText(getActivity(), "Scansionare codice", Toast.LENGTH_LONG ).show();
+            //Toast.makeText(getActivity(), "Scansionare codice", Toast.LENGTH_LONG ).show();*/
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 2) {
             if(resultCode == RESULT_OK) {
-
                 String returnString = data.getStringExtra("barcode");
-
-                productViewModel.getProductFromBarcode(returnString);
+                try {
+                    productViewModel.getProductFromBarcode(returnString).observe(getActivity(), new Observer<List<Product>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Product> products) {
+                            adapter.setProducts(products);
+                        }
+                    });
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
-    }
+    }*/
 
 }
