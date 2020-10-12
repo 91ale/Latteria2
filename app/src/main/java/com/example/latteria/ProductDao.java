@@ -9,6 +9,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Dao
 public interface ProductDao {
@@ -29,7 +31,7 @@ public interface ProductDao {
     LiveData<List<Product>> getAllProducts();
 
     @Query("SELECT * FROM product_table WHERE barcode = :barcode")
-    LiveData<List<Product>> getProductFromBarcode(String barcode);
+    Single<Product> getProductFromBarcode(String barcode);
 
 
 }

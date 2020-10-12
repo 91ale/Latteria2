@@ -2,7 +2,6 @@ package com.example.latteria;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -10,13 +9,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ProductRepository {
 
     private ProductDao productDao;
     private LiveData<List<Product>> allProducts;
+    private List<Product> productList = new ArrayList<>();
 
     public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getInstance(application);
@@ -42,9 +42,12 @@ public class ProductRepository {
 
     public LiveData<List<Product>> getAllProducts() { return allProducts; }
 
-    public LiveData<List<Product>> getProductFromBarcode(String barcode) throws ExecutionException, InterruptedException {
-        return productDao.getProductFromBarcode(barcode);
-        // return new GetProductFromBarcodeAsyncTask(productDao).execute(barcode).get();
+    public List<Product> getProductFromBarcode(String barcode) {
+        productDao.getProductFromBarcode(barcode)
+                .subscribeOn(Schedulers.io())
+                .subscribe(product -> productList.add(product));
+
+        return productList;
     }
 
     private static class InsertProductAsyncTask extends AsyncTask<Product, Void, Void> {
@@ -100,28 +103,6 @@ public class ProductRepository {
         protected Void doInBackground(Void... voids) {
             productDao.deleteAllproducts();
             return null;
-        }
-    }
-
-    private static class GetProductFromBarcodeAsyncTask extends AsyncTask<String, Void, List<Product>> {
-        private ProductDao productDao;
-
-        private GetProductFromBarcodeAsyncTask(ProductDao productDao) {
-            this.productDao = productDao;
-        }
-
-        @Override
-        protected List<Product> doInBackground(String... barcodes) {
-            List<Product> spesa = new ArrayList<>();
-            //spesa = productDao.getProductFromBarcode(barcodes[0]);
-
-            return spesa;
-        }
-
-        @Override
-        protected void onPostExecute (List<Product> spesa) {
-            Log.d("prodotto",spesa.get(0).getName());
-            super.onPostExecute(spesa);
         }
     }
 

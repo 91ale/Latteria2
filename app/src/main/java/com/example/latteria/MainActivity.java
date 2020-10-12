@@ -6,6 +6,8 @@ import android.view.KeyEvent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.concurrent.ExecutionException;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -44,7 +46,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
         Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-        ((HomeFragment) fragment).onMyKeyDown(keyCode, event);
+        try {
+            ((HomeFragment) fragment).onMyKeyDown(keyCode, event);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return super.onKeyDown(keyCode, event);
     }
 

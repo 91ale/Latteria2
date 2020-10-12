@@ -45,30 +45,13 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        /*productViewModel.getAllProducts().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
-            @Override
-            public void onChanged(@Nullable List<Product> products) {
-                adapter.setProducts(products);
-            }
-        });*/
 
     }
 
-    public void onMyKeyDown(int key, KeyEvent event){
+    public void onMyKeyDown(int key, KeyEvent event) throws ExecutionException, InterruptedException {
         Log.d("KeyEvent", String.valueOf(event.getNumber()));
         if (key == KeyEvent.KEYCODE_ENTER) {
-            try {
-                productViewModel.getProductFromBarcode(barcode).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Product> products) {
-                        adapter.setProducts(products);
-                    }
-                });
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            adapter.setProducts(productViewModel.getProductFromBarcode(barcode));
             barcode = "";
         }
         else {
