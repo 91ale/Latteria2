@@ -18,14 +18,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
 
     private ProductViewModel productViewModel;
     ProductAdapter adapter = new ProductAdapter();
-    String barcode = "";
+    private String barcode = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,8 +54,13 @@ public class HomeFragment extends Fragment {
     public void onMyKeyDown(int key, KeyEvent event) throws ExecutionException, InterruptedException {
         Log.d("KeyEvent", String.valueOf(event.getNumber()));
         if (key == KeyEvent.KEYCODE_ENTER) {
-            adapter.setProducts(productViewModel.getProductFromBarcode(barcode));
-            barcode = "";
+            AppExecutors.xDisk(() -> {
+                List<Product> products = productViewModel.getProductFromBarcode(barcode);
+                barcode = "";
+                AppExecutors.xMain(() -> {
+                    adapter.setProducts(products);
+                });
+            });
         }
         else {
             barcode = barcode + event.getNumber();

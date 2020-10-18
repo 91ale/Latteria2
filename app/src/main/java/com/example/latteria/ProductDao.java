@@ -31,7 +31,8 @@ public interface ProductDao {
     LiveData<List<Product>> getAllProducts();
 
     @Query("SELECT * FROM product_table WHERE barcode = :barcode")
-    Single<Product> getProductFromBarcode(String barcode);
+    //Single<Product> getProductFromBarcode(String barcode);
+    Product getProductFromBarcode(String barcode);
 
 
 }
