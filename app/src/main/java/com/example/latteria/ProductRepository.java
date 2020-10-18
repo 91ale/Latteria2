@@ -3,34 +3,17 @@ package com.example.latteria;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.google.android.gms.common.api.Response;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class ProductRepository {
 
     private ProductDao productDao;
-    //private LiveData<List<Product>> allProducts;
     private List<Product> productList = new ArrayList<>();
-    private MutableLiveData<List<Product>> products;
 
     public ProductRepository(Application application) {
         ProductDatabase database = ProductDatabase.getInstance(application);
         productDao = database.productDao();
-        //allProducts = productDao.getAllProducts();
     }
 
     public void insert(Product product) {
@@ -48,19 +31,6 @@ public class ProductRepository {
     public void deleteAllProducts() {
         new DeleteAllProductsAsyncTask(productDao).execute();
     }
-
-    /*public LiveData<List<Product>> getAllProducts() { return allProducts; }*/
-
-    /*public List<Product> getProductFromBarcode(String barcode) {
-        Disposable disposable = productDao.getProductFromBarcode(barcode)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(product -> productList.add(product));
-
-        disposable.dispose();
-
-        return productList;
-    }*/
 
     public List<Product> getProductFromBarcode(String barcode) {
         productList.add(productDao.getProductFromBarcode(barcode));

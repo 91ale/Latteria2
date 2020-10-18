@@ -27,11 +27,7 @@ public interface ProductDao {
     @Query("DELETE FROM product_table")
     void deleteAllproducts();
 
-    @Query("SELECT * FROM product_table")
-    LiveData<List<Product>> getAllProducts();
-
     @Query("SELECT * FROM product_table WHERE barcode = :barcode")
-    //Single<Product> getProductFromBarcode(String barcode);
     Product getProductFromBarcode(String barcode);
 
 
