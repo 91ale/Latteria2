@@ -7,11 +7,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-public class ProductViewModel extends AndroidViewModel {
+public class SpesaViewModel extends AndroidViewModel {
 
     private ProductRepository repository;
 
-    public ProductViewModel(@NonNull Application application) {
+    public SpesaViewModel(@NonNull Application application) {
         super(application);
         repository = new ProductRepository(application);
     }

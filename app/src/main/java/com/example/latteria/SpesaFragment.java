@@ -20,15 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class HomeFragment extends Fragment {
+public class SpesaFragment extends Fragment {
 
-    private ProductViewModel productViewModel;
+    private SpesaViewModel spesaViewModel;
     ProductAdapter adapter = new ProductAdapter();
     private String barcode = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_spesa, container, false);
         setHasOptionsMenu(true);
         return root;
     }
@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        spesaViewModel = new ViewModelProvider(this).get(SpesaViewModel.class);
 
     }
 
@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         Log.d("KeyEvent", String.valueOf(event.getNumber()));
         if (key == KeyEvent.KEYCODE_ENTER) {
             AppExecutors.xDisk(() -> {
-                List<Product> products = productViewModel.getProductFromBarcode(barcode);
+                List<Product> products = spesaViewModel.getProductFromBarcode(barcode);
                 barcode = "";
                 AppExecutors.xMain(() -> {
                     adapter.setProducts(products);
