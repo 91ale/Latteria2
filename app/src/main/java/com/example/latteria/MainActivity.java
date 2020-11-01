@@ -1,7 +1,6 @@
 package com.example.latteria;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -11,8 +10,6 @@ import java.util.concurrent.ExecutionException;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -20,29 +17,10 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    Fragment spesaFragment = new Fragment();
-    Fragment insertFragment = new Fragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-
-            @Override
-            public void onBackStackChanged() {
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                if (f != null) {
-                    Log.d("HEREHERE","");
-                    String fragClassName = spesaFragment.getClass().getName();
-                    if (fragClassName.equals(SpesaFragment.class.getName())) {
-                        setTitle("Home");
-                    }
-                }
-            }
-        });
-
     }
 
     @Override
@@ -58,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-        //Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
-        //spesaFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
 
     }
 

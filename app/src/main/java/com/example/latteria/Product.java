@@ -24,10 +24,6 @@ public class Product {
         this.sellingPrice = sellingPrice;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
-    }
-
     public int getProductID() {
         return productID;
     }
@@ -36,9 +32,7 @@ public class Product {
         return barcode;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     public String getDescription() {
         return description;
@@ -47,4 +41,14 @@ public class Product {
     public double getSellingPrice() {
         return sellingPrice;
     }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setSellingPrice(double sellingPrice) { this.sellingPrice = sellingPrice; }
 }

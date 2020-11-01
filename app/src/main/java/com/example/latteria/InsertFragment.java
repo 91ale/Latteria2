@@ -6,21 +6,21 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import com.example.latteria.ui.Insert.InsertViewModel;
-import com.example.latteria.ui.Spesa.SpesaViewModel;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 public class InsertFragment extends Fragment {
 
@@ -28,7 +28,9 @@ public class InsertFragment extends Fragment {
     EditText editDescrizioneProdotto;
     EditText editPrezzoProdotto;
     EditText editNomeProdotto;
+    Button btnAggiungiProdotto;
     private String barcode = "";
+    Product product;
 
     private InsertViewModel insertViewModel;
 
@@ -40,6 +42,19 @@ public class InsertFragment extends Fragment {
         editDescrizioneProdotto = root.findViewById(R.id.editDescrizioneProdotto);
         editPrezzoProdotto = root.findViewById(R.id.editPrezzoProdotto);
         editNomeProdotto = root.findViewById(R.id.editNomeProdotto);
+        btnAggiungiProdotto = root.findViewById(R.id.btnAggiungiProdotto);
+
+        btnAggiungiProdotto.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AppExecutors.xDisk(() -> {
+                    product.setName(editNomeProdotto.getText().toString());
+                    product.setSellingPrice(Double.parseDouble(editPrezzoProdotto.getText().toString()));
+                    product.setDescription(editDescrizioneProdotto.getText().toString());
+                    insertViewModel.insert(product);
+                });
+            }
+        });
+
         editDescrizioneProdotto.setEnabled(false);
         editPrezzoProdotto.setEnabled(false);
         editNomeProdotto.setEnabled(false);
@@ -54,10 +69,15 @@ public class InsertFragment extends Fragment {
         Log.d("KeyEvent", String.valueOf(event.getNumber()));
         if (key == KeyEvent.KEYCODE_ENTER) {
             AppExecutors.xDisk(() -> {
-                Product product = insertViewModel.getSingleProductFromBarcode(barcode);
+                product = insertViewModel.getSingleProductFromBarcode(barcode);
                 AppExecutors.xMain(() -> {
                     textCodiceProdotto.setText(barcode);
                     barcode = "";
+                    if (product != null) {
+                        editDescrizioneProdotto.setText(product.getDescription());
+                        editPrezzoProdotto.setText(String.valueOf(product.getSellingPrice()));
+                        editNomeProdotto.setText(product.getName());
+                    }
                     editDescrizioneProdotto.setEnabled(true);
                     editPrezzoProdotto.setEnabled(true);
                     editNomeProdotto.setEnabled(true);
