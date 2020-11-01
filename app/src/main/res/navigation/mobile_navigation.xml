@@ -9,17 +9,25 @@
         android:id="@+id/navigation_spesa"
         android:name="com.example.latteria.SpesaFragment"
         android:label="@string/title_Spesa"
-        tools:layout="@layout/fragment_spesa" />
+        tools:layout="@layout/fragment_spesa" >
+        <action
+            android:id="@+id/action_navigation_spesa_to_navigation_insert"
+            app:destination="@id/navigation_insert" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.latteria.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_insert"
+        android:name="com.example.latteria.InsertFragment"
+        android:label="@string/title_insert"
+        tools:layout="@layout/fragment_insert" >
+        <action
+            android:id="@+id/action_navigation_insert_to_navigation_prodotti"
+            app:destination="@id/navigation_prodotti" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.latteria.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_prodotti"
+        android:name="com.example.latteria.ProdottiFragment"
+        android:label="@string/title_prodotti"
+        tools:layout="@layout/fragment_prodotti" />
 </navigation>

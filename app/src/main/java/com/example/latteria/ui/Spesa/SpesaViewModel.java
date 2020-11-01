@@ -1,6 +1,9 @@
-package com.example.latteria;
+package com.example.latteria.ui.Spesa;
 
 import android.app.Application;
+
+import com.example.latteria.Product;
+import com.example.latteria.ProductRepository;
 
 import java.util.List;
 
