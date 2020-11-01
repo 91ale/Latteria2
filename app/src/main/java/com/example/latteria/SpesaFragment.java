@@ -49,7 +49,27 @@ public class SpesaFragment extends Fragment {
 
     }
 
-    public void onMyKeyDown(int key, KeyEvent event) throws ExecutionException, InterruptedException {
+    public void myDispatchKeyEvent(KeyEvent event) {
+        Log.d("KeyEvent", String.valueOf(event.getNumber()));
+        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                AppExecutors.xDisk(() -> {
+                    List<Product> products = spesaViewModel.getProductFromBarcode(barcode);
+                    barcode = "";
+                    AppExecutors.xMain(() -> {
+                        adapter.setProducts(products);
+                    });
+                });
+            }
+        }
+        else {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                barcode = barcode + event.getNumber();
+            }
+        }
+    }
+
+    /*public void onMyKeyDown(int key, KeyEvent event) throws ExecutionException, InterruptedException {
         Log.d("KeyEvent", String.valueOf(event.getNumber()));
         if (key == KeyEvent.KEYCODE_ENTER) {
             AppExecutors.xDisk(() -> {
@@ -63,7 +83,7 @@ public class SpesaFragment extends Fragment {
         else {
             barcode = barcode + event.getNumber();
         }
-    }
+    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

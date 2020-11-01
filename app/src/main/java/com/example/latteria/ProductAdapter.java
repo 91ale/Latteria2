@@ -28,7 +28,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         Product currentProduct = products.get(position);
         holder.textViewNome.setText(currentProduct.getName());
         holder.textViewDescrizione.setText(currentProduct.getDescription());
-        holder.textViewPrezzo.setText(String.valueOf(currentProduct.getSellingPrice()));
+        holder.textViewPrezzo.setText(new StringBuilder().append("€ ").append(String.valueOf(currentProduct.getSellingPrice()).replace(".", ",")).toString());
     }
 
     @Override

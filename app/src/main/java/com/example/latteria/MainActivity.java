@@ -40,6 +40,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+        Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+
+        if(fragment instanceof SpesaFragment) {
+            ((SpesaFragment) fragment).myDispatchKeyEvent(event);
+        } else if (fragment instanceof InsertFragment) {
+            ((InsertFragment) fragment).myDispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
         Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
@@ -63,6 +76,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
 }
